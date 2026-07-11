@@ -1,5 +1,5 @@
 import { TEAM_ID, SEASON, API, abbr, short, teamColor } from './constants.js';
-import { $, pad, setPulse, pulseEl, contrastText, stripZero, portrait, capLogoImg, localTime, localDateLabel, etDateLabel, etTime, fmtParts, ET_C } from './utils.js';
+import { $, pad, setPulse, pulseEl, contrastText, stripZero, portrait, capLogoImg, localTime, localDateLabel, etDateLabel, etTime } from './utils.js';
 import { STORE, fetchJSON } from './store.js';
 import { isFinalG, isLiveG, sides } from './game-helpers.js';
 import { winProb, american, pctFrom } from './model.js';
@@ -8,8 +8,7 @@ let countdownTarget=0, countdownLive=false, liveScoreText='';
 function tick(){
   const now=Date.now(), local=new Date(now);
   $('local-clock').textContent=pad(local.getHours())+':'+pad(local.getMinutes())+':'+pad(local.getSeconds());
-  const ec=fmtParts(ET_C,now);
-  $('et-clock').textContent='ET · '+ec.hour+':'+ec.minute;
+  $('et-clock').textContent='ET · '+etTime(now);
   const cd=$('countdown');
   if(countdownLive){cd.style.color='var(--red-bright)';if(cd.textContent!==(liveScoreText||'LIVE')){cd.textContent=liveScoreText||'LIVE';pulseEl(cd);}return;}
   if(!countdownTarget){cd.textContent='—';cd.style.color='var(--faint)';return;}

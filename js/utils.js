@@ -27,7 +27,6 @@ export function localDateLabel(ms){const d=new Date(ms);return WD[d.getDay()]+' 
 /* Eastern Time via Intl — DST-safe (was a fixed -4 offset before, wrong Nov–Mar) */
 export const ET_D=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',month:'numeric',day:'numeric'});
 export const ET_T=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit',hour12:true});
-export const ET_C=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:false});
 export function fmtParts(f,ms){const p={};f.formatToParts(ms).forEach(x=>p[x.type]=x.value);return p;}
 export function etDateLabel(ms){const p=fmtParts(ET_D,ms);return p.weekday+' '+p.month+'/'+p.day;}
 export function etTime(ms){const p=fmtParts(ET_T,ms);return p.hour+':'+p.minute+' '+(p.dayPeriod||'');}
