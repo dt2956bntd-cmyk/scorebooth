@@ -620,5 +620,19 @@
 </div>
 
 <script type="module" src="js/main.js"></script>
+<!-- Ko-fi floating support widget: donating happens in an on-page overlay instead of a new tab,
+     so it's fewer steps than the plain link in the footer/nag popup. Colors are fixed (not
+     team-themed) since Ko-fi renders this into its own iframe with no access to our CSS vars. -->
+<script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
+<script>
+  if (typeof kofiWidgetOverlay !== 'undefined') {
+    kofiWidgetOverlay.draw('jeanyvesdd', {
+      'type': 'floating-chat',
+      'floating-chat.donateButton.text': 'Support',
+      'floating-chat.donateButton.background-color': '#c8272c',
+      'floating-chat.donateButton.text-color': '#fff'
+    });
+  }
+</script>
 </body>
 </html>
