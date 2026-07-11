@@ -59,6 +59,7 @@ export function renderSchedule(games,finals){
 function renderModel(pPhi,pOpp,phiHome,oid){
   const wp=winProb(pPhi,pOpp,phiHome),op=1-wp,ab=abbr(oid);
   const phiC=teamColor(TEAM_ID),oppC=teamColor(oid);
+  STORE.lastWinProb={wp:wp,oid:oid};
   const wpP=$('wpPhi'),wpO=$('wpOpp');
   const phiTxt=abbr(TEAM_ID)+' '+(wp*100).toFixed(1)+'%',oppTxt=(op*100).toFixed(1)+'% '+ab;
   const narrowP=wp<0.18,narrowO=op<0.18;

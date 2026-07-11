@@ -62,9 +62,12 @@ function renderGame(focus,phase){
     $('gbPerf').innerHTML='<div class="perf">'+portrait(pp?pp.id:0,pp?pp.fullName:'TBA','por-sm')+'<span class="who">'+(pp?pp.fullName:'TBA')+'</span><span class="stat">'+abbr(TEAM_ID)+' starter</span></div><div class="perf">'+portrait(op?op.id:0,op?op.fullName:'TBA','por-sm')+'<span class="who">'+(op?op.fullName:'TBA')+'</span><span class="stat">'+abbr(oid)+' starter</span></div>';
     $('apToggle').textContent='Projected lineups';
     renderPlayers('apBody',focus,'pre',null,apSel,()=>apOpen);
+    const shareBtn=$('shareGameBtn');if(shareBtn)shareBtn.classList.add('hide');
     return;
   }
   const won=s.phi.isWinner;
+  STORE.lastGameCard={oid:oid,phiScore:s.phi.score,oppScore:s.opp.score,live:live,won:won};
+  const shareBtn=$('shareGameBtn');if(shareBtn)shareBtn.classList.remove('hide');
   setPulse($('gbScore'),abbr(TEAM_ID)+' '+(s.phi.score!=null?s.phi.score:0)+' – '+(s.opp.score!=null?s.opp.score:0)+' '+abbr(oid)+(live?'<span class="res live">LIVE</span>':'<span class="res '+(won?'w':'l')+'">'+(won?'WIN':'LOSS')+'</span>'));
   const ls=focus.linescore;
   $('gbSub').textContent=(live?((ls&&ls.inningState?ls.inningState+' ':'')+((ls&&ls.currentInningOrdinal)||'')):etDateLabel(ms))+' · '+((focus.venue&&focus.venue.name)||'');
