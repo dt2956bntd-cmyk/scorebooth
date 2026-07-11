@@ -4,7 +4,7 @@ import { resetStore } from './store.js';
 import { reloadAllData } from './data-loader.js';
 import { applyTeamBrand, setupManifest } from './theme.js';
 
-const TEAM_KEY='phbooth:team';
+const TEAM_KEY='scorebooth:team';
 
 function updateTeamBtn(){
   const b=$('teamBtn');

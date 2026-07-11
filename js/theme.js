@@ -51,7 +51,7 @@ export function applyTeamBrand(){
 }
 
 /* ===== theme: auto (system) / light / dark, cycled by the header button ===== */
-const THEME_KEY='phbooth:theme';
+const THEME_KEY='scorebooth:theme';
 let themePref='auto';
 const mqDark=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
 function resolvedTheme(){return themePref==='auto'?((mqDark&&mqDark.matches)?'dark':'light'):themePref;}
@@ -84,7 +84,7 @@ let manifestLink=null, appleLink=null, manifestBlobUrl=null;
 export function setupManifest(){
   try{
     const icon=teamIconDataURI();
-    const man={name:'Phils Booth',short_name:'Phils Booth',start_url:'.',scope:'.',display:'standalone',background_color:'#e9edf4',theme_color:teamColor(TEAM_ID),icons:[{src:icon,sizes:'any',type:'image/svg+xml',purpose:'any'},{src:icon,sizes:'any',type:'image/svg+xml',purpose:'maskable'}]};
+    const man={name:'ScoreBooth',short_name:'ScoreBooth',start_url:'.',scope:'.',display:'standalone',background_color:'#e9edf4',theme_color:teamColor(TEAM_ID),icons:[{src:icon,sizes:'any',type:'image/svg+xml',purpose:'any'},{src:icon,sizes:'any',type:'image/svg+xml',purpose:'maskable'}]};
     if(manifestBlobUrl)URL.revokeObjectURL(manifestBlobUrl);
     manifestBlobUrl=URL.createObjectURL(new Blob([JSON.stringify(man)],{type:'application/manifest+json'}));
     if(!manifestLink){manifestLink=document.createElement('link');manifestLink.rel='manifest';document.head.appendChild(manifestLink);}

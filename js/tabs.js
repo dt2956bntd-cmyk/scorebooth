@@ -10,7 +10,7 @@ function activateTab(name){
   positionIndicator();
   const panel=document.querySelector('.tab-panel[data-panel="'+name+'"]');
   if(panel){panel.style.transition='none';panel.style.transform='translateX('+(dir*26)+'px)';panel.style.opacity='0';requestAnimationFrame(()=>{panel.style.transition='transform .32s cubic-bezier(.4,0,.2,1),opacity .32s';panel.style.transform='';panel.style.opacity='';});}
-  LS.set('phbooth:tab',name);
+  LS.set('scorebooth:tab',name);
 }
 
 export function initTabs(){
@@ -29,6 +29,6 @@ export function initTabs(){
   window.addEventListener('resize',positionIndicator);
   window.addEventListener('load',positionIndicator);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(positionIndicator);
-  const savedTab=LS.get('phbooth:tab');activateTab(savedTab||'booth');
+  const savedTab=LS.get('scorebooth:tab');activateTab(savedTab||'booth');
   setTimeout(positionIndicator,300);
 }

@@ -17,7 +17,7 @@ function setStatus(s,extra){
   else{dot.className='dot off';txt.textContent='Offline — Booth shows the last good snapshot';foot.textContent='Offline snapshot · reconnect and hit Refresh';if(!standingsLoaded){$('divLoad')&&($('divLoad').textContent='Live standings need a connection — hit Refresh.');$('divRankNote').textContent='needs a connection';$('wcNote').textContent='needs a connection';}}
 }
 
-function cacheKey(){return 'phbooth:cache:v1:'+TEAM_ID;}
+function cacheKey(){return 'scorebooth:cache:v1:'+TEAM_ID;}
 const FEED_KEYS=['season','detail','stand','roster','leaders','tstats'];
 let LAST_PAYLOAD=null;
 /* render whatever feeds we have; order matters — leaders before schedule (star props), before game tab (key player) */
@@ -69,7 +69,7 @@ async function loadAll(){
     const next=renderAll(payload);
     if(next)await renderPitchers(next);
     if(failed.length)setStatus('partial',failed.join(', '));else setStatus('live');
-  }catch(e){setStatus('offline');console.warn('Phils Booth live fetch failed —',e.message);}
+  }catch(e){setStatus('offline');console.warn('ScoreBooth live fetch failed —',e.message);}
   finally{if(btn)btn.classList.remove('spin');inFlight=false;}
 }
 let refreshTimer=null;

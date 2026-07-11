@@ -58,9 +58,9 @@ function syncSpoiler(){document.body.classList.toggle('hide-spoiler',spoiler.che
 function bindCovers(){document.querySelectorAll('.cover').forEach(c=>{c.onclick=()=>{const row=c.closest('.game-row');row.classList.add('revealed');if(row.dataset.pk)REVEALED.add(row.dataset.pk);};});}
 
 export function initScheduleStandings(){
-  const spoilerPref=LS.get('phbooth:spoiler');if(spoilerPref!==null&&spoilerPref!==undefined)spoiler.checked=spoilerPref;
+  const spoilerPref=LS.get('scorebooth:spoiler');if(spoilerPref!==null&&spoilerPref!==undefined)spoiler.checked=spoilerPref;
   syncSpoiler();
-  spoiler.addEventListener('change',()=>{LS.set('phbooth:spoiler',spoiler.checked);syncSpoiler();});
+  spoiler.addEventListener('change',()=>{LS.set('scorebooth:spoiler',spoiler.checked);syncSpoiler();});
   $('resultsMore').addEventListener('click',()=>{const l=$('resultsList');const ex=l.classList.toggle('expanded');const n=l.querySelectorAll('.game-row.extra').length;$('resultsMore').textContent=ex?'Show less':('Show '+n+' more');});
   $('schedMore').addEventListener('click',()=>{const l=$('schedList');const ex=l.classList.toggle('expanded');const n=l.querySelectorAll('.game-row.extra').length;$('schedMore').textContent=ex?'Show less':('Show '+n+' more');});
 }

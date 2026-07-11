@@ -1,8 +1,8 @@
-# Phils Booth
+# ScoreBooth
 
 A personal, single-page MLB dashboard: live win probability, game tracking, schedule, standings, roster, and team leaders for any of the 30 MLB teams — installable as a PWA. No build step, no framework, no backend.
 
-> Started as a Phillies-only side project (hence the name) and grew into a team-switchable dashboard. The name stuck.
+> Started as a Phillies-only side project called "Phils Booth" and grew into a team-switchable dashboard for all 30 teams — renamed to ScoreBooth to match.
 
 ## ⚠️ Legal / Attribution — read before you fork this
 
