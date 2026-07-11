@@ -6,7 +6,6 @@ import { buildForm, renderSchedule, renderPitchers } from './render-booth.js';
 import { renderGameTab } from './render-game.js';
 import { renderScheduleList, renderResults, renderStandings, standingsLoaded } from './render-schedule-standings.js';
 import { renderRoster, renderLeaders, renderTeamStats } from './render-team.js';
-import { autoGrade } from './predictions.js';
 
 function nowHMS(){const t=new Date();return pad(t.getHours())+':'+pad(t.getMinutes())+':'+pad(t.getSeconds());}
 function setStatus(s,extra){
@@ -18,7 +17,7 @@ function setStatus(s,extra){
   else{dot.className='dot off';txt.textContent='Offline — Booth shows the last good snapshot';foot.textContent='Offline snapshot · reconnect and hit Refresh';if(!standingsLoaded){$('divLoad')&&($('divLoad').textContent='Live standings need a connection — hit Refresh.');$('divRankNote').textContent='needs a connection';$('wcNote').textContent='needs a connection';}}
 }
 
-const CACHE_KEY='phbooth:cache:v1';
+function cacheKey(){return 'phbooth:cache:v1:'+TEAM_ID;}
 const FEED_KEYS=['season','detail','stand','roster','leaders','tstats'];
 let LAST_PAYLOAD=null;
 /* render whatever feeds we have; order matters — leaders before schedule (star props), before game tab (key player) */
@@ -63,13 +62,12 @@ async function loadAll(){
     results.forEach((r,i)=>{if(r.status==='fulfilled')fresh[FEED_KEYS[i]]=r.value;else failed.push(FEED_KEYS[i]);});
     if(failed.length===FEED_KEYS.length)throw new Error(results[0].reason?results[0].reason.message:'all feeds failed');
     /* merge fresh feeds over the last good payload so stale sections keep their previous data */
-    const base=LAST_PAYLOAD||((LS.get(CACHE_KEY)||{}).p)||{};
+    const base=LAST_PAYLOAD||((LS.get(cacheKey())||{}).p)||{};
     const payload=Object.assign({},base,fresh);
     LAST_PAYLOAD=payload;
-    LS.set(CACHE_KEY,{t:Date.now(),p:payload});
+    LS.set(cacheKey(),{t:Date.now(),p:payload});
     const next=renderAll(payload);
     if(next)await renderPitchers(next);
-    if(STORE.next&&isFinalG(STORE.next))autoGrade();else $('autoBanner').classList.remove('on');
     if(failed.length)setStatus('partial',failed.join(', '));else setStatus('live');
   }catch(e){setStatus('offline');console.warn('Phils Booth live fetch failed —',e.message);}
   finally{if(btn)btn.classList.remove('spin');inFlight=false;}
@@ -78,10 +76,21 @@ let refreshTimer=null;
 function scheduleRefresh(){clearTimeout(refreshTimer);refreshTimer=setTimeout(runLoad,STORE.liveActive?30000:60000);}
 async function runLoad(){await loadAll();scheduleRefresh();}
 
-export function initDataLoader(){
-  const cachedBoot=LS.get(CACHE_KEY);
+function bootFromSnapshotThenLoad(){
+  const cachedBoot=LS.get(cacheKey());
   if(cachedBoot&&cachedBoot.p){try{LAST_PAYLOAD=cachedBoot.p;const n=renderAll(cachedBoot.p);if(n)renderPitchers(n);setStatus('snapshot',cachedBoot.t);}catch(e){console.warn('snapshot render failed —',e.message);}}
   runLoad();
+}
+
+export function initDataLoader(){
+  bootFromSnapshotThenLoad();
   document.addEventListener('visibilitychange',()=>{if(!document.hidden){clearTimeout(refreshTimer);runLoad();}});
   $('refreshBtn').addEventListener('click',()=>{clearTimeout(refreshTimer);runLoad();});
+}
+
+/* called after a team switch: drop any cross-team payload in memory and force a fresh load for the new TEAM_ID */
+export function reloadAllData(){
+  LAST_PAYLOAD=null;
+  clearTimeout(refreshTimer);
+  bootFromSnapshotThenLoad();
 }

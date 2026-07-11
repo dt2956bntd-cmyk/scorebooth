@@ -54,18 +54,18 @@ function renderGame(focus,phase){
   const s=sides(focus),oid=s.opp.team.id,ms=Date.parse(focus.gameDate),live=phase==='live';
   $('gameEyebrowTxt').textContent=live?"Today's Game":(phase==='pre'?'Next Game':'Last Game · Final');
   if(phase==='pre'){
-    setPulse($('gbScore'),'PHI '+(s.phiHome?'vs':'@')+' '+abbr(oid));
+    setPulse($('gbScore'),abbr(TEAM_ID)+' '+(s.phiHome?'vs':'@')+' '+abbr(oid));
     $('gbSub').textContent=etDateLabel(ms)+', '+etTime(ms)+' ET · '+((focus.venue&&focus.venue.name)||'');
     $('gbLs').innerHTML='';$('gbDecisions').innerHTML='<span>First pitch <b>'+etTime(ms)+' ET</b> · '+fmt12(inZone(ms,KST_OFF))+' KST</span>';
     $('gbPerfHead').textContent='Probable Starters';
     const pp=s.phi.probablePitcher,op=s.opp.probablePitcher;
-    $('gbPerf').innerHTML='<div class="perf">'+portrait(pp?pp.id:0,pp?pp.fullName:'TBA','por-sm')+'<span class="who">'+(pp?pp.fullName:'TBA')+'</span><span class="stat">PHI starter</span></div><div class="perf">'+portrait(op?op.id:0,op?op.fullName:'TBA','por-sm')+'<span class="who">'+(op?op.fullName:'TBA')+'</span><span class="stat">'+abbr(oid)+' starter</span></div>';
+    $('gbPerf').innerHTML='<div class="perf">'+portrait(pp?pp.id:0,pp?pp.fullName:'TBA','por-sm')+'<span class="who">'+(pp?pp.fullName:'TBA')+'</span><span class="stat">'+abbr(TEAM_ID)+' starter</span></div><div class="perf">'+portrait(op?op.id:0,op?op.fullName:'TBA','por-sm')+'<span class="who">'+(op?op.fullName:'TBA')+'</span><span class="stat">'+abbr(oid)+' starter</span></div>';
     $('apToggle').textContent='Projected lineups';
     renderPlayers('apBody',focus,'pre',null,apSel,()=>apOpen);
     return;
   }
   const won=s.phi.isWinner;
-  setPulse($('gbScore'),'PHI '+(s.phi.score!=null?s.phi.score:0)+' – '+(s.opp.score!=null?s.opp.score:0)+' '+abbr(oid)+(live?'<span class="res live">LIVE</span>':'<span class="res '+(won?'w':'l')+'">'+(won?'WIN':'LOSS')+'</span>'));
+  setPulse($('gbScore'),abbr(TEAM_ID)+' '+(s.phi.score!=null?s.phi.score:0)+' – '+(s.opp.score!=null?s.opp.score:0)+' '+abbr(oid)+(live?'<span class="res live">LIVE</span>':'<span class="res '+(won?'w':'l')+'">'+(won?'WIN':'LOSS')+'</span>'));
   const ls=focus.linescore;
   $('gbSub').textContent=(live?((ls&&ls.inningState?ls.inningState+' ':'')+((ls&&ls.currentInningOrdinal)||'')):etDateLabel(ms))+' · '+((focus.venue&&focus.venue.name)||'');
   renderLineScore('gbLs',focus);
@@ -96,11 +96,11 @@ export function renderGameTab(games){
 }
 function renderNext(g){
   const s=sides(g),oid=s.opp.team.id,ms=Date.parse(g.gameDate);
-  $('ngScore').innerHTML='PHI '+(s.phiHome?'vs':'@')+' '+abbr(oid);
+  $('ngScore').innerHTML=abbr(TEAM_ID)+' '+(s.phiHome?'vs':'@')+' '+abbr(oid);
   $('ngSub').textContent=etDateLabel(ms)+', '+etTime(ms)+' ET · '+fmt12(inZone(ms,KST_OFF))+' KST · '+((g.venue&&g.venue.name)||'');
   $('ngPitchers').innerHTML='<span>First pitch <b>'+etTime(ms)+' ET</b></span>';
   const pp=s.phi.probablePitcher,op=s.opp.probablePitcher;
-  $('ngPerf').innerHTML='<div class="perf">'+portrait(pp?pp.id:0,pp?pp.fullName:'TBA','por-sm')+'<span class="who">'+(pp?pp.fullName:'TBA')+'</span><span class="stat">PHI starter</span></div><div class="perf">'+portrait(op?op.id:0,op?op.fullName:'TBA','por-sm')+'<span class="who">'+(op?op.fullName:'TBA')+'</span><span class="stat">'+abbr(oid)+' starter</span></div>';
+  $('ngPerf').innerHTML='<div class="perf">'+portrait(pp?pp.id:0,pp?pp.fullName:'TBA','por-sm')+'<span class="who">'+(pp?pp.fullName:'TBA')+'</span><span class="stat">'+abbr(TEAM_ID)+' starter</span></div><div class="perf">'+portrait(op?op.id:0,op?op.fullName:'TBA','por-sm')+'<span class="who">'+(op?op.fullName:'TBA')+'</span><span class="stat">'+abbr(oid)+' starter</span></div>';
   $('ngToggle').textContent='Projected lineups';
   renderPlayers('ngBody',g,'pre',null,ngSel,()=>ngOpen);
 }
@@ -109,7 +109,7 @@ function kpCard(id,name,sub,reason){return '<div class="kp-card">'+portrait(id,n
 function renderKeyPlayer(lastFinal){
   const el=$('keyPlayer');if(!el)return;
   function seasonStr(id){const s=LEADERS_BY_ID[id];if(!s)return '';return [s.HR&&s.HR+' HR',s.AVG&&s.AVG+' AVG',s.RBI&&s.RBI+' RBI'].filter(Boolean).join(' · ');}
-  function fallback(){const ids=Object.keys(LEADERS_BY_ID);if(!ids.length){el.innerHTML='<div class="muted-load">Key player loads with live data.</div>';return;}let best=ids[0];ids.forEach(id=>{const s=LEADERS_BY_ID[id];if(s.HR!=null&&(LEADERS_BY_ID[best].HR==null||parseInt(s.HR)>parseInt(LEADERS_BY_ID[best].HR)))best=id;});const s=LEADERS_BY_ID[best];el.innerHTML=kpCard(best,s.name,'Why · team leader this season',seasonStr(best)||'Phillies offensive leader');}
+  function fallback(){const ids=Object.keys(LEADERS_BY_ID);if(!ids.length){el.innerHTML='<div class="muted-load">Key player loads with live data.</div>';return;}let best=ids[0];ids.forEach(id=>{const s=LEADERS_BY_ID[id];if(s.HR!=null&&(LEADERS_BY_ID[best].HR==null||parseInt(s.HR)>parseInt(LEADERS_BY_ID[best].HR)))best=id;});const s=LEADERS_BY_ID[best];el.innerHTML=kpCard(best,s.name,'Why · team leader this season',seasonStr(best)||'Team offensive leader');}
   if(!lastFinal){fallback();return;}
   const s=sides(lastFinal),key=s.phiHome?'home':'away';
   el.innerHTML=skelHTML(2);

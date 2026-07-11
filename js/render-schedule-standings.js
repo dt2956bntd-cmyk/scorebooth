@@ -1,4 +1,4 @@
-import { TEAM_ID, abbr, short } from './constants.js';
+import { TEAM_ID, DIVISIONS, abbr, short } from './constants.js';
 import { $, LS, logoImg, stripZero, setHTMLIfChanged, etDateLabel, etTime } from './utils.js';
 import { isFinalG, isLiveG, sides } from './game-helpers.js';
 
@@ -39,14 +39,17 @@ function rowUpcoming(g,extra){const s=sides(g),oid=s.opp.team.id,ms=Date.parse(g
 const ORD=['','1st','2nd','3rd','4th','5th','6th'];
 export let standingsLoaded=false;
 export function renderStandings(data){
-  const east=(data.records||[]).find(r=>r.division&&r.division.id===204);const tbody=$('divBody');
-  if(!east){tbody.innerHTML='<tr><td colspan="5" class="muted-load">Standings unavailable.</td></tr>';return;}
-  const rows=east.teamRecords.slice().sort((a,b)=>parseInt(a.divisionRank)-parseInt(b.divisionRank));
+  /* find whichever division the selected team plays in — was hardcoded to NL East (204) */
+  const div=(data.records||[]).find(r=>r.teamRecords&&r.teamRecords.some(t=>t.team.id===TEAM_ID));const tbody=$('divBody');
+  if(!div){tbody.innerHTML='<tr><td colspan="5" class="muted-load">Standings unavailable.</td></tr>';return;}
+  const divLabel=(div.division&&DIVISIONS[div.division.id])||'Division';
+  $('divName').textContent=divLabel;$('divRankLabel').textContent=divLabel;
+  const rows=div.teamRecords.slice().sort((a,b)=>parseInt(a.divisionRank)-parseInt(b.divisionRank));
   tbody.innerHTML='';
   rows.forEach((t,i)=>{const id=t.team.id,isPhi=id===TEAM_ID,isLead=i===0,gb=(t.gamesBack==='-'?'—':t.gamesBack),pct=stripZero(t.winningPercentage||(t.leagueRecord&&t.leagueRecord.pct));const tr=document.createElement('tr');tr.className=(isPhi?'is-phi ':'')+(isLead?'is-lead':'');tr.innerHTML='<td>'+logoImg(id,'logo-sm','logo-sm-fb')+(t.team.name||short(id))+'</td><td>'+t.wins+'</td><td>'+t.losses+'</td><td>'+pct+'</td><td>'+gb+'</td>';tbody.appendChild(tr);});
   const phi=rows.find(t=>t.team.id===TEAM_ID),leader=rows[0];
-  if(phi){const rank=parseInt(phi.divisionRank);$('divRankVal').textContent=ORD[rank]||(rank+'th');$('divRankVal').className='value '+(rank===1?'green':'red');$('divRankNote').textContent=(phi.gamesBack==='-')?'Leading the NL East':phi.gamesBack+' GB behind '+abbr(leader.team.id);const wcb=phi.wildCardGamesBack,wcEl=$('wcVal'),wcN=$('wcNote');if(wcb==='-'||(typeof wcb==='string'&&wcb.charAt(0)==='+')){wcEl.textContent=(wcb==='-'?'IN':wcb);wcEl.className='value green';wcN.textContent='Holding a wild card spot';}else{wcEl.textContent='−'+wcb;wcEl.className='value red';wcN.textContent=wcb+' back of the 3rd WC spot';}}
-  const lu=east.lastUpdated?new Date(east.lastUpdated):null;$('divAsOf').textContent=lu?'· as of '+(lu.getUTCMonth()+1)+'/'+lu.getUTCDate():'';
+  if(phi){const rank=parseInt(phi.divisionRank);$('divRankVal').textContent=ORD[rank]||(rank+'th');$('divRankNote').textContent=(phi.gamesBack==='-')?('Leading the '+divLabel):phi.gamesBack+' GB behind '+abbr(leader.team.id);const wcb=phi.wildCardGamesBack,wcEl=$('wcVal'),wcN=$('wcNote');if(wcb==='-'||(typeof wcb==='string'&&wcb.charAt(0)==='+')){wcEl.textContent=(wcb==='-'?'IN':wcb);wcN.textContent='Holding a wild card spot';}else{wcEl.textContent='−'+wcb;wcN.textContent=wcb+' back of the 3rd WC spot';}}
+  const lu=div.lastUpdated?new Date(div.lastUpdated):null;$('divAsOf').textContent=lu?'· as of '+(lu.getUTCMonth()+1)+'/'+lu.getUTCDate():'';
   standingsLoaded=true;
 }
 
