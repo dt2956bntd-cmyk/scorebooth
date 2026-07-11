@@ -23,6 +23,17 @@ let FORM_BY_ID={};
 /* recent form */
 function formatForm(w,l,code){if(w==null)return '';let s='';if(code){const ty=code.charAt(0)==='W'?'Winning':code.charAt(0)==='L'?'Losing':'';const n=code.slice(1);if(ty&&n)s='   '+n+' '+ty+' Streak';}return w+'-'+l+s;}
 function phiFormCode(finals){const f10=finals.slice(-10),w=f10.filter(g=>sides(g).phi.isWinner).length;let st=0,t=null;for(let i=finals.length-1;i>=0;i--){const ww=sides(finals[i]).phi.isWinner?'W':'L';if(t===null){t=ww;st=1;}else if(ww===t)st++;else break;}return {w:w,l:f10.length-w,code:t?(t+st):''};}
+/* "today at a glance" strip at the top of the Booth tab — record + streak come from the schedule
+   data we already have here; division rank is filled in separately by render-schedule-standings.js
+   once standings load (whichever loads first leaves the other stat as "—" until both are in) */
+function updateTodayStrip(finals){
+  const rv=$('todayRecord'),sv=$('todayStreak');
+  if(!rv||!sv)return;
+  const rec=finals.length?sides(finals[finals.length-1]).phi.leagueRecord:null;
+  rv.textContent=rec?(rec.wins+'-'+rec.losses):'—';
+  const f=STORE.phiForm;
+  sv.textContent=(f&&f.code)?f.code:'—';
+}
 export function buildForm(stand){FORM_BY_ID={};(stand.records||[]).forEach(r=>(r.teamRecords||[]).forEach(t=>{const lt=((t.records&&t.records.splitRecords)||[]).find(x=>x.type==='lastTen');FORM_BY_ID[t.team.id]={w:lt?lt.wins:null,l:lt?lt.losses:null,code:(t.streak&&t.streak.streakCode)||''};}));}
 function sideLogoHTML(id){return capLogoImg(id,'team-logo','logo-fallback');}
 function fillSide(pos,t){
@@ -39,6 +50,7 @@ export function renderSchedule(games,finals){
   const now=Date.now();
   const next=games.find(isLiveG)||games.find(g=>!isFinalG(g)&&!isPostponedG(g)&&Date.parse(g.gameDate)>=now-3*3600000)||games.filter(g=>!isFinalG(g)&&!isPostponedG(g)).slice(-1)[0]||null;
   STORE.next=next; STORE.finals=finals; STORE.phiForm=phiFormCode(finals);
+  updateTodayStrip(finals);
   if(!next){countdownTarget=0;countdownLive=false;$('vsLabel').textContent='No game scheduled';return null;}
   const {phi,opp,phiHome}=sides(next),oid=opp.team.id;
   // away on left, home on right

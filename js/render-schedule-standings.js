@@ -48,7 +48,8 @@ export function renderStandings(data){
   tbody.innerHTML='';
   rows.forEach((t,i)=>{const id=t.team.id,isPhi=id===TEAM_ID,isLead=i===0,gb=(t.gamesBack==='-'?'—':t.gamesBack),pct=stripZero(t.winningPercentage||(t.leagueRecord&&t.leagueRecord.pct));const tr=document.createElement('tr');tr.className=(isPhi?'is-phi ':'')+(isLead?'is-lead':'');tr.innerHTML='<td>'+logoImg(id,'logo-sm','logo-sm-fb')+'<span class="team-name-text">'+short(id)+'</span></td><td>'+t.wins+'</td><td>'+t.losses+'</td><td>'+pct+'</td><td>'+gb+'</td>';tbody.appendChild(tr);});
   const phi=rows.find(t=>t.team.id===TEAM_ID),leader=rows[0];
-  if(phi){const rank=parseInt(phi.divisionRank);$('divRankVal').textContent=ORD[rank]||(rank+'th');$('divRankNote').textContent=(phi.gamesBack==='-')?('Leading the '+divLabel):phi.gamesBack+' GB behind '+abbr(leader.team.id);const wcb=phi.wildCardGamesBack,wcEl=$('wcVal'),wcN=$('wcNote');if(wcb==='-'||(typeof wcb==='string'&&wcb.charAt(0)==='+')){wcEl.textContent=(wcb==='-'?'IN':wcb);wcN.textContent='Holding a wild card spot';}else{wcEl.textContent='−'+wcb;wcN.textContent=wcb+' back of the 3rd WC spot';}}
+  if(phi){const rank=parseInt(phi.divisionRank);$('divRankVal').textContent=ORD[rank]||(rank+'th');$('divRankNote').textContent=(phi.gamesBack==='-')?('Leading the '+divLabel):phi.gamesBack+' GB behind '+abbr(leader.team.id);const wcb=phi.wildCardGamesBack,wcEl=$('wcVal'),wcN=$('wcNote');if(wcb==='-'||(typeof wcb==='string'&&wcb.charAt(0)==='+')){wcEl.textContent=(wcb==='-'?'IN':wcb);wcN.textContent='Holding a wild card spot';}else{wcEl.textContent='−'+wcb;wcN.textContent=wcb+' back of the 3rd WC spot';}
+    const rankEl=$('todayRank');if(rankEl)rankEl.textContent=(ORD[rank]||(rank+'th'))+' '+divLabel;}
   const lu=div.lastUpdated?new Date(div.lastUpdated):null;$('divAsOf').textContent=lu?'· as of '+(lu.getUTCMonth()+1)+'/'+lu.getUTCDate():'';
   standingsLoaded=true;
 }

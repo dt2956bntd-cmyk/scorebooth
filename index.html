@@ -317,6 +317,7 @@
   .r-row .pos{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--mid);width:34px;text-align:right;}
   .r-row .bt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint);width:58px;text-align:right;}
   .ts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(98px,1fr));gap:10px;}
+  .today-strip{margin-top:8px;}
   .ts-cell{background:var(--glass-2);border:1px solid var(--glass-edge);border-radius:15px;padding:15px 12px;text-align:center;box-shadow:var(--shadow-sm),var(--rim);}
   .ts-cell .v{font-family:'Oswald',sans-serif;font-weight:700;font-size:26px;}
   .ts-cell .k{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.06em;color:var(--mid);margin-top:5px;}
@@ -409,6 +410,8 @@
     .hs-lg{width:56px;height:56px;}
     .lcard .lname{font-size:17px;}
     .lval{font-size:26px;}
+    .today-strip .v{font-size:19px;}
+    .today-strip .ts-cell{padding:12px 8px;}
     .pitcher{gap:12px;}
   }
   @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto;} .wp-seg,.tab-ind{transition:none;} .skel-bar,.cd-s,.pulse{animation:none;}}
@@ -452,6 +455,11 @@
 
   <!-- BOOTH -->
   <section class="tab-panel active" data-panel="booth" role="tabpanel" id="panel-booth" aria-labelledby="tab-booth">
+    <div class="ts-grid today-strip" id="todayStrip">
+      <div class="ts-cell"><div class="v" id="todayRecord">&mdash;</div><div class="k">RECORD</div></div>
+      <div class="ts-cell"><div class="v" id="todayStreak">&mdash;</div><div class="k">STREAK</div></div>
+      <div class="ts-cell"><div class="v" id="todayRank">&mdash;</div><div class="k">DIVISION</div></div>
+    </div>
     <h2 class="eyebrow">Next Up</h2>
     <div class="panel nextgame">
       <div class="matchup-side" id="sideL">
