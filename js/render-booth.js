@@ -29,7 +29,7 @@ function fillSide(pos,t){
   const id=t.team.id;
   $('side'+pos+'abbr').textContent=abbr(id);
   $('side'+pos+'logo').innerHTML=sideLogoHTML(id);
-  $('side'+pos+'full').textContent=t.team.name||short(id);
+  $('side'+pos+'full').textContent=short(id);
   $('side'+pos+'rec').textContent=t.leagueRecord?(t.leagueRecord.wins+'–'+t.leagueRecord.losses+' · '+stripZero(t.leagueRecord.pct)):'';
   const f=(id===TEAM_ID)?STORE.phiForm:(FORM_BY_ID[id]||null);
   $('side'+pos+'form').textContent=f?formatForm(f.w,f.l,f.code):'';

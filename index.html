@@ -210,7 +210,8 @@
   .divtable th{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.04em;color:var(--mid);text-align:right;padding:13px 16px 11px 0;border-bottom:1px solid var(--panel-edge);}
   .divtable th:first-child{text-align:left;padding-left:22px;}
   .divtable td{font-family:'JetBrains Mono',monospace;font-size:16px;text-align:right;padding:12px 16px 12px 0;border-bottom:1px solid var(--grid-line);color:var(--ink);}
-  .divtable td:first-child{text-align:left;padding-left:22px;font-family:'Archivo',sans-serif;font-weight:600;display:flex;align-items:center;}
+  .divtable td:first-child{text-align:left;padding-left:22px;font-family:'Archivo',sans-serif;font-weight:600;display:flex;align-items:center;min-width:0;}
+  .team-name-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
   .divtable tr.is-phi td{background:var(--red-dim);}
   .divtable tr.is-phi td:first-child{color:var(--red-bright);font-weight:800;}
   .divtable tr.is-lead td:first-child::after{content:" \25C6";color:var(--amber);font-size:11px;margin-left:6px;}
@@ -221,7 +222,8 @@
   .game-row{display:grid;grid-template-columns:104px 1fr auto auto;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--grid-line);}
   .game-row:last-child{border-bottom:none;}
   .game-row .date{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--mid);}
-  .game-row .opp{font-family:'Archivo',sans-serif;font-size:16px;font-weight:600;display:flex;align-items:center;}
+  .game-row .opp{font-family:'Archivo',sans-serif;font-size:16px;font-weight:600;display:flex;align-items:center;min-width:0;}
+  .game-row .opp-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
   .game-row .opp small{color:var(--mid);font-weight:400;font-family:'JetBrains Mono',monospace;font-size:12px;margin-left:6px;}
   .game-row .score{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:17px;letter-spacing:0.02em;min-width:64px;text-align:center;}
   .game-row .when{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--led);text-align:right;}
@@ -382,12 +384,25 @@
 
   @media (max-width:720px){
     .standings-grid,.lineup-grid{grid-template-columns:1fr;}
-    .nextgame{gap:10px;} .matchup-side .abbr{font-size:30px;gap:8px;}
-    .countdown{font-size:20px;}
-    .game-row{grid-template-columns:74px 1fr auto auto;gap:8px;}
+    .nextgame{gap:8px;padding:22px 16px 16px;}
+    .matchup-side .abbr{font-size:26px;gap:6px;}
+    .matchup-side .full{font-size:12px;} .matchup-side .rec{font-size:12px;} .matchup-side .rec-sub{font-size:10.5px;}
+    .countdown{font-size:18px;}
+    .nextgame-meta{grid-template-columns:1fr;gap:7px;text-align:left;}
+    .odds-wrap{padding:18px 16px;}
+    .wp-seg{padding:0 10px;font-size:14px;}
+    .pitcher-grid{gap:10px;}
+    .p-name{font-size:18px;}
+    .p-meta{font-size:11px;} .p-line{font-size:12px;}
+    .game-row{grid-template-columns:64px 1fr auto auto;gap:8px;padding:12px 16px;}
+    .game-row .opp{font-size:14.5px;}
+    .game-row .opp small{display:none;} /* probable-pitcher name is the first thing to drop when tight on width */
     .divtable th:nth-child(4),.divtable td:nth-child(4){display:none;}
     .kp-card{flex-direction:column;text-align:center;}
-    .lcard{padding:18px 46px;gap:14px;}
+    .lcard{padding:16px 40px;gap:12px;}
+    .hs-lg{width:56px;height:56px;}
+    .lcard .lname{font-size:17px;}
+    .lval{font-size:26px;}
     .pitcher{gap:12px;}
   }
   @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto;} .wp-seg,.tab-ind{transition:none;} .skel-bar,.cd-s,.pulse{animation:none;}}
@@ -556,8 +571,10 @@
       <div class="panel stat-card"><div class="label">Wild Card</div><div class="value" id="wcVal">&mdash;</div><div class="note" id="wcNote">Loading&hellip;</div></div>
     </div>
     <div class="panel divtable" style="margin-top:14px">
+      <div style="overflow-x:auto">
       <table><thead><tr><th>Team</th><th>W</th><th>L</th><th>PCT</th><th>GB</th></tr></thead>
       <tbody id="divBody"><tr><td colspan="5" id="divLoad"><div class="skel"><div class="skel-bar" style="width:78%"></div><div class="skel-bar" style="width:64%"></div><div class="skel-bar" style="width:70%"></div></div></td></tr></tbody></table>
+      </div>
     </div>
 
     <div class="eyebrow">Recent Results</div>
