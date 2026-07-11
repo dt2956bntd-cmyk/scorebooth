@@ -1,6 +1,6 @@
 import { TEAM_ID, DIVISIONS, abbr, short } from './constants.js';
 import { $, LS, logoImg, stripZero, setHTMLIfChanged, etDateLabel, etTime } from './utils.js';
-import { isFinalG, isLiveG, sides } from './game-helpers.js';
+import { isFinalG, isLiveG, isPostponedG, sides } from './game-helpers.js';
 
 function renderScheduleList(games){
   const now=Date.now();
@@ -34,7 +34,7 @@ function renderResults(games){
 }
 export { renderResults };
 function rowFinal(g,extra){const s=sides(g),oid=s.opp.team.id,ms=Date.parse(g.gameDate),res=s.phi.isWinner?'W':'L';return '<div class="game-row final'+(extra?' extra':'')+'" data-result="'+res+'" data-pk="'+g.gamePk+'"><span class="date">'+etDateLabel(ms)+'</span><span class="opp">'+logoImg(oid,'logo-sm','logo-sm-fb')+'<span class="opp-text">'+(s.phiHome?'vs ':'@ ')+short(oid)+'</span></span><span class="score">'+s.phi.score+' – '+s.opp.score+'</span><span class="result-tag '+res.toLowerCase()+'">'+res+'</span><button type="button" class="cover" aria-label="Reveal final score">▦ ▦ ▦ &nbsp; TAP TO REVEAL</button></div>';}
-function rowUpcoming(g,extra){const s=sides(g),oid=s.opp.team.id,ms=Date.parse(g.gameDate),live=isLiveG(g);const when=live?('LIVE '+((g.linescore&&g.linescore.currentInningOrdinal)||'')):(etDateLabel(ms)+' · '+etTime(ms)+' ET');const pp=s.phi.probablePitcher;return '<div class="game-row'+(extra?' extra':'')+'"><span class="date">'+etDateLabel(ms)+'</span><span class="opp">'+logoImg(oid,'logo-sm','logo-sm-fb')+'<span class="opp-text">'+(s.phiHome?'vs ':'@ ')+short(oid)+(pp?' <small>'+pp.fullName+'</small>':'')+'</span></span><span class="when" style="grid-column:3/5">'+when+'</span></div>';}
+function rowUpcoming(g,extra){const s=sides(g),oid=s.opp.team.id,ms=Date.parse(g.gameDate),live=isLiveG(g),ppd=isPostponedG(g);const when=ppd?'<span class="ppd-tag">POSTPONED</span>':(live?('LIVE '+((g.linescore&&g.linescore.currentInningOrdinal)||'')):(etDateLabel(ms)+' · '+etTime(ms)+' ET'));const pp=s.phi.probablePitcher;return '<div class="game-row'+(extra?' extra':'')+'"><span class="date">'+etDateLabel(ms)+'</span><span class="opp">'+logoImg(oid,'logo-sm','logo-sm-fb')+'<span class="opp-text">'+(s.phiHome?'vs ':'@ ')+short(oid)+(pp&&!ppd?' <small>'+pp.fullName+'</small>':'')+'</span></span><span class="when" style="grid-column:3/5">'+when+'</span></div>';}
 
 const ORD=['','1st','2nd','3rd','4th','5th','6th'];
 export let standingsLoaded=false;

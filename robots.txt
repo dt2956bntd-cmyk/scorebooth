@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dt2956bntd-cmyk.github.io/scorebooth/sitemap.xml

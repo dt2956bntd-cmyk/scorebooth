@@ -1,7 +1,7 @@
 import { TEAM_ID, SEASON, API, abbr, short, teamColor } from './constants.js';
 import { $, pad, setPulse, pulseEl, contrastText, stripZero, portrait, capLogoImg, localTime, localDateLabel, etDateLabel, etTime } from './utils.js';
 import { STORE, fetchJSON } from './store.js';
-import { isFinalG, isLiveG, sides } from './game-helpers.js';
+import { isFinalG, isLiveG, isPostponedG, sides } from './game-helpers.js';
 import { winProb, american, pctFrom } from './model.js';
 
 let countdownTarget=0, countdownLive=false, liveScoreText='';
@@ -37,7 +37,7 @@ function fillSide(pos,t){
 
 export function renderSchedule(games,finals){
   const now=Date.now();
-  const next=games.find(isLiveG)||games.find(g=>!isFinalG(g)&&Date.parse(g.gameDate)>=now-3*3600000)||games.filter(g=>!isFinalG(g)).slice(-1)[0]||null;
+  const next=games.find(isLiveG)||games.find(g=>!isFinalG(g)&&!isPostponedG(g)&&Date.parse(g.gameDate)>=now-3*3600000)||games.filter(g=>!isFinalG(g)&&!isPostponedG(g)).slice(-1)[0]||null;
   STORE.next=next; STORE.finals=finals; STORE.phiForm=phiFormCode(finals);
   if(!next){countdownTarget=0;countdownLive=false;$('vsLabel').textContent='No game scheduled';return null;}
   const {phi,opp,phiHome}=sides(next),oid=opp.team.id;

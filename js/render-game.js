@@ -1,7 +1,7 @@
 import { TEAM_ID, abbr, short } from './constants.js';
 import { $, headshot, portrait, logoImg, skelHTML, setPulse, localTime, etDateLabel, etTime } from './utils.js';
 import { STORE, getBox } from './store.js';
-import { isFinalG, isLiveG, sides } from './game-helpers.js';
+import { isFinalG, isLiveG, isPostponedG, sides } from './game-helpers.js';
 import { LEADERS_BY_ID } from './render-team.js';
 
 let apOpen=false, ngOpen=false, apSel={team:null}, ngSel={team:null};
@@ -81,7 +81,7 @@ export function renderGameTab(games){
   const finals=games.filter(isFinalG);
   const lastFinal=finals[finals.length-1];
   const now=Date.now();
-  const nextUp=games.find(g=>!isFinalG(g)&&!isLiveG(g)&&Date.parse(g.gameDate)>=now-3*3600000);
+  const nextUp=games.find(g=>!isFinalG(g)&&!isLiveG(g)&&!isPostponedG(g)&&Date.parse(g.gameDate)>=now-3*3600000);
   STORE.liveActive=!!live;
   renderKeyPlayer(lastFinal||null);
   if(live){
