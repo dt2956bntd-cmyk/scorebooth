@@ -46,6 +46,12 @@ or `npx serve`, or just open `index.html` via a local server of your choice (ope
 
 The code favors terse, single-file-style JS (long one-liners, no framework) to keep the whole app dependency-free and easy to drop anywhere. If you're used to a more conventional style, that's a deliberate tradeoff for this project, not an oversight.
 
+## Support
+
+If you find this useful, you can [support the developer on Ko-fi](https://ko-fi.com/jeanyvesdd) — totally optional, the app is free either way and no features are gated behind it.
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/jeanyvesdd)
+
 ## Known limitations
 
 - Relies on an unofficial MLB API with no uptime/format guarantees (see Legal section above)

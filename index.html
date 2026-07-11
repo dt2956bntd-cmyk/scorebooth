@@ -353,6 +353,8 @@
   :where(button,input,[tabindex]):focus-visible{outline:2px solid var(--red-bright);outline-offset:2px;}
 
   footer{margin-top:50px;padding-top:22px;border-top:1px solid var(--panel-edge);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--mid);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  footer a{color:inherit;text-decoration:none;border-bottom:1px dotted var(--mid);}
+  footer a:hover{color:var(--red-bright);border-bottom-color:var(--red-bright);}
 
   @media (max-width:720px){
     .standings-grid,.lineup-grid{grid-template-columns:1fr;}
@@ -563,7 +565,7 @@
   </section>
 
   <footer>
-    <span>ScoreBooth &middot; personal fan dashboard &middot; non-commercial</span>
+    <span>ScoreBooth &middot; personal fan dashboard &middot; non-commercial &middot; <a href="https://ko-fi.com/jeanyvesdd" target="_blank" rel="noopener">Support</a></span>
     <span id="footStatus">Connecting&hellip;</span>
   </footer>
   <div class="attribution">Team logos and player images &copy; MLB Advanced Media, L.P. and the respective clubs; data via the MLB Stats API. Shown here for personal, non-commercial use only.</div>
