@@ -80,7 +80,7 @@ function teamIconDataURI(){
   const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="'+primary+'"/><text x="50" y="54" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="'+fontSize+'" fill="'+ink+'">'+label+'</text></svg>';
   return 'data:image/svg+xml,'+encodeURIComponent(svg);
 }
-let manifestLink=null, appleLink=null, manifestBlobUrl=null;
+let manifestLink=null, appleLink=null, faviconLink=null, manifestBlobUrl=null;
 export function setupManifest(){
   try{
     const icon=teamIconDataURI();
@@ -91,5 +91,8 @@ export function setupManifest(){
     manifestLink.href=manifestBlobUrl;
     if(!appleLink){appleLink=document.createElement('link');appleLink.rel='apple-touch-icon';document.head.appendChild(appleLink);}
     appleLink.href=icon;
+    /* browser-tab favicon — same team-colored icon, just a different <link rel> */
+    if(!faviconLink){faviconLink=document.createElement('link');faviconLink.rel='icon';faviconLink.type='image/svg+xml';document.head.appendChild(faviconLink);}
+    faviconLink.href=icon;
   }catch(e){}
 }
