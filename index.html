@@ -48,6 +48,7 @@
     --badge-edge:rgba(255,255,255,0.55); --tabind:rgba(255,255,255,0.42);
     --skel-a:rgba(20,22,34,0.06); --skel-b:rgba(20,22,34,0.13);
     --pulse-bg:rgba(228,0,43,0.16);
+    --modal-surface:#fbfbfe;
   }
   :root[data-theme="dark"]{
     --ink:#e9ebf3; --mid:#a6abb9; --faint:#828896;
@@ -69,6 +70,7 @@
     --badge-edge:rgba(255,255,255,0.18); --tabind:rgba(255,255,255,0.10);
     --skel-a:rgba(255,255,255,0.05); --skel-b:rgba(255,255,255,0.11);
     --pulse-bg:rgba(255,77,106,0.20);
+    --modal-surface:#22252f;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -321,8 +323,7 @@
   .hide{display:none !important;}
 
   .team-modal-backdrop{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(10,12,18,0.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);padding:20px;}
-  .team-modal{width:100%;max-width:640px;max-height:82vh;display:flex;flex-direction:column;overflow:hidden;background:#fbfbfe;}
-  :root[data-theme="dark"] .team-modal{background:#22252f;}
+  .team-modal{width:100%;max-width:640px;max-height:82vh;display:flex;flex-direction:column;overflow:hidden;background:var(--modal-surface);}
   .team-modal-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--grid-line);flex-shrink:0;}
   .team-modal-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:20px;}
   .team-modal-close{background:none;border:none;font-size:26px;line-height:1;color:var(--faint);cursor:pointer;padding:0 4px;}
@@ -335,6 +336,19 @@
   :root[data-theme="dark"] .team-opt img{background:#ffffff;border-radius:50%;box-sizing:border-box;padding:5px;}
   .team-opt span{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mid);text-align:center;letter-spacing:0.02em;}
   @media (max-width:560px){.team-grid{grid-template-columns:repeat(2,1fr);}}
+
+  .support-modal-backdrop{position:fixed;inset:0;z-index:110;display:flex;align-items:center;justify-content:center;background:rgba(10,12,18,0.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);padding:20px;}
+  .support-modal{width:100%;max-width:360px;padding:30px 26px 22px;text-align:center;background:var(--modal-surface);}
+  .support-modal-icon{font-size:34px;margin-bottom:8px;}
+  .support-modal-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:21px;margin-bottom:10px;}
+  .support-modal-body{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--mid);line-height:1.65;margin-bottom:22px;}
+  .support-modal-actions{display:flex;flex-direction:column;gap:9px;}
+  .support-modal-primary{display:block;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;letter-spacing:0.03em;color:#fff;background:var(--red-bright);border-radius:999px;padding:12px;text-decoration:none;transition:opacity .14s;}
+  .support-modal-primary:hover{opacity:.88;}
+  .support-modal-later{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--mid);background:var(--btn-bg);border:1px solid var(--glass-edge);border-radius:999px;padding:10px;cursor:pointer;}
+  .support-modal-later:hover{color:var(--ink);}
+  .support-modal-never{margin-top:14px;background:none;border:none;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint);text-decoration:underline;cursor:pointer;padding:2px;}
+  .support-modal-never:hover{color:var(--mid);}
 
   /* skeleton shimmer */
   .skel{padding:18px 22px;display:grid;gap:12px;}
@@ -589,6 +603,19 @@
       <button class="team-modal-close" id="teamModalClose" aria-label="Close">&times;</button>
     </div>
     <div class="team-grid" id="teamGrid"></div>
+  </div>
+</div>
+
+<div class="support-modal-backdrop hide" id="supportModalBackdrop">
+  <div class="support-modal panel" id="supportModal" role="dialog" aria-modal="true" aria-label="Support ScoreBooth">
+    <div class="support-modal-icon">&#9749;</div>
+    <div class="support-modal-title">Enjoying ScoreBooth?</div>
+    <p class="support-modal-body">If it's been useful, consider supporting the developer with a coffee on Ko-fi. Totally optional &mdash; the app stays free either way.</p>
+    <div class="support-modal-actions">
+      <a class="support-modal-primary" id="supportModalYes" href="https://ko-fi.com/jeanyvesdd" target="_blank" rel="noopener">&#9749; Support on Ko-fi</a>
+      <button class="support-modal-later" id="supportModalLater" type="button">Maybe later</button>
+    </div>
+    <button class="support-modal-never" id="supportModalNever" type="button">Don't ask again</button>
   </div>
 </div>
 
