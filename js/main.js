@@ -3,6 +3,7 @@ import { initTabs } from './tabs.js';
 import { initTeamSelect } from './team-select.js';
 import { initSupportPrompt } from './support-prompt.js';
 import { initShareCard } from './share-card.js';
+import { initGameNotify } from './game-notify.js';
 import { initScheduleStandings } from './render-schedule-standings.js';
 import { initGameTabToggles } from './render-game.js';
 import { initDataLoader } from './data-loader.js';
@@ -27,6 +28,7 @@ initTabs();
 initDataLoader();
 initSupportPrompt();
 initShareCard();
+initGameNotify();
 
 /* register the app-shell service worker so the installed PWA can still open with no network */
 if('serviceWorker' in navigator){

@@ -3,8 +3,9 @@ import { $, pad, setPulse, pulseEl, contrastText, stripZero, portrait, capLogoIm
 import { STORE, fetchJSON } from './store.js';
 import { isFinalG, isLiveG, isPostponedG, sides } from './game-helpers.js';
 import { winProb, american, pctFrom } from './model.js';
+import { notifyGameStart } from './game-notify.js';
 
-let countdownTarget=0, countdownLive=false, liveScoreText='';
+let countdownTarget=0, countdownLive=false, liveScoreText='', countdownOpp='';
 function tick(){
   const now=Date.now(), local=new Date(now);
   $('local-clock').textContent=pad(local.getHours())+':'+pad(local.getMinutes())+':'+pad(local.getSeconds());
@@ -13,7 +14,7 @@ function tick(){
   if(countdownLive){cd.style.color='var(--red-bright)';if(cd.textContent!==(liveScoreText||'LIVE')){cd.textContent=liveScoreText||'LIVE';pulseEl(cd);}return;}
   if(!countdownTarget){cd.textContent='—';cd.style.color='var(--faint)';return;}
   let diff=Math.floor((countdownTarget-now)/1000);
-  if(diff<=0){cd.textContent='LIVE';cd.style.color='var(--red-bright)';}
+  if(diff<=0){cd.textContent='LIVE';cd.style.color='var(--red-bright)';notifyGameStart(countdownTarget,countdownOpp);}
   else{const d=Math.floor(diff/86400);diff-=d*86400;const h=Math.floor(diff/3600);diff-=h*3600;const m=Math.floor(diff/60);const s=diff-m*60;cd.style.color='var(--led)';cd.innerHTML=(d>0?d+'d ':'')+pad(h)+':'+pad(m)+':<span class="cd-s">'+pad(s)+'</span>';}
 }
 tick(); setInterval(tick,1000);
@@ -58,7 +59,7 @@ export function renderSchedule(games,finals){
   $('sideL').classList.toggle('phi',next.teams.away.team.id===TEAM_ID);
   $('sideR').classList.toggle('phi',next.teams.home.team.id===TEAM_ID);
   const ms=Date.parse(next.gameDate),venue=(next.venue&&next.venue.name)||'';
-  countdownLive=isLiveG(next);countdownTarget=ms;
+  countdownLive=isLiveG(next);countdownTarget=ms;countdownOpp=abbr(oid);
   $('vsLabel').textContent=countdownLive?'In progress':'Remaining';
   $('venueLine').innerHTML='📍 <b>'+venue+'</b>';
   $('localLine').innerHTML='🕒 <b>'+localDateLabel(ms)+', '+localTime(ms)+' local</b>';

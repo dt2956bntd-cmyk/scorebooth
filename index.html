@@ -120,6 +120,7 @@
   .refresh{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;background:var(--glass);border:1px solid var(--glass-edge);color:var(--mid);padding:8px 15px;border-radius:999px;cursor:pointer;transition:all .14s;box-shadow:var(--shadow-sm),var(--rim);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);}
   .refresh:hover{color:var(--red-bright);transform:translateY(-1px);}
   .refresh.spin{opacity:.5;pointer-events:none;}
+  #notifyBtn.on{color:var(--led);border-color:var(--led);}
 
   .tabs{position:sticky;top:10px;z-index:20;display:flex;gap:0;margin-top:16px;padding:6px;border-radius:18px;overflow-x:auto;background:var(--glass-radial);border:1px solid var(--glass-edge);}
   .tab-ind{position:absolute;top:0;left:0;width:0;height:0;border-radius:13px;background:var(--tabind);box-shadow:var(--shadow-sm), var(--rim);transition:transform .36s cubic-bezier(.45,.05,.18,1), width .36s cubic-bezier(.45,.05,.18,1), height .2s;z-index:0;pointer-events:none;}
@@ -429,6 +430,7 @@
     <div class="hdr-right">
       <div style="display:flex;gap:8px;">
         <button class="refresh" id="teamBtn" aria-label="Change team" title="Change team">&#9918; PHI</button>
+        <button class="refresh" id="notifyBtn" aria-label="Toggle game-start notifications" aria-pressed="false" title="Notify me when my team's game starts (only while this tab is open)">&#128276; Notify</button>
         <button class="refresh" id="themeBtn" aria-label="Toggle color theme" title="Theme: Auto / Light / Dark">&#9681; Auto</button>
       </div>
       <div class="clock">
