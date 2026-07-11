@@ -23,3 +23,8 @@ initTheme();
 setupManifest();
 initTabs();
 initDataLoader();
+
+/* register the app-shell service worker so the installed PWA can still open with no network */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{});});
+}
