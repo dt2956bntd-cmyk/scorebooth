@@ -1,5 +1,5 @@
 import { TEAM_ID, abbr, short } from './constants.js';
-import { $, headshot, portrait, logoImg, skelHTML, setPulse, KST_OFF, inZone, fmt12, etDateLabel, etTime } from './utils.js';
+import { $, headshot, portrait, logoImg, skelHTML, setPulse, localTime, etDateLabel, etTime } from './utils.js';
 import { STORE, getBox } from './store.js';
 import { isFinalG, isLiveG, sides } from './game-helpers.js';
 import { LEADERS_BY_ID } from './render-team.js';
@@ -56,7 +56,7 @@ function renderGame(focus,phase){
   if(phase==='pre'){
     setPulse($('gbScore'),abbr(TEAM_ID)+' '+(s.phiHome?'vs':'@')+' '+abbr(oid));
     $('gbSub').textContent=etDateLabel(ms)+', '+etTime(ms)+' ET · '+((focus.venue&&focus.venue.name)||'');
-    $('gbLs').innerHTML='';$('gbDecisions').innerHTML='<span>First pitch <b>'+etTime(ms)+' ET</b> · '+fmt12(inZone(ms,KST_OFF))+' KST</span>';
+    $('gbLs').innerHTML='';$('gbDecisions').innerHTML='<span>First pitch <b>'+etTime(ms)+' ET</b> · '+localTime(ms)+' local</span>';
     $('gbPerfHead').textContent='Probable Starters';
     const pp=s.phi.probablePitcher,op=s.opp.probablePitcher;
     $('gbPerf').innerHTML='<div class="perf">'+portrait(pp?pp.id:0,pp?pp.fullName:'TBA','por-sm')+'<span class="who">'+(pp?pp.fullName:'TBA')+'</span><span class="stat">'+abbr(TEAM_ID)+' starter</span></div><div class="perf">'+portrait(op?op.id:0,op?op.fullName:'TBA','por-sm')+'<span class="who">'+(op?op.fullName:'TBA')+'</span><span class="stat">'+abbr(oid)+' starter</span></div>';
@@ -97,7 +97,7 @@ export function renderGameTab(games){
 function renderNext(g){
   const s=sides(g),oid=s.opp.team.id,ms=Date.parse(g.gameDate);
   $('ngScore').innerHTML=abbr(TEAM_ID)+' '+(s.phiHome?'vs':'@')+' '+abbr(oid);
-  $('ngSub').textContent=etDateLabel(ms)+', '+etTime(ms)+' ET · '+fmt12(inZone(ms,KST_OFF))+' KST · '+((g.venue&&g.venue.name)||'');
+  $('ngSub').textContent=etDateLabel(ms)+', '+etTime(ms)+' ET · '+localTime(ms)+' local · '+((g.venue&&g.venue.name)||'');
   $('ngPitchers').innerHTML='<span>First pitch <b>'+etTime(ms)+' ET</b></span>';
   const pp=s.phi.probablePitcher,op=s.opp.probablePitcher;
   $('ngPerf').innerHTML='<div class="perf">'+portrait(pp?pp.id:0,pp?pp.fullName:'TBA','por-sm')+'<span class="who">'+(pp?pp.fullName:'TBA')+'</span><span class="stat">'+abbr(TEAM_ID)+' starter</span></div><div class="perf">'+portrait(op?op.id:0,op?op.fullName:'TBA','por-sm')+'<span class="who">'+(op?op.fullName:'TBA')+'</span><span class="stat">'+abbr(oid)+' starter</span></div>';

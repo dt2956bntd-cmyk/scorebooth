@@ -20,10 +20,10 @@ export function portrait(id,name,cls){const ini=initials(name);return '<img clas
 export function logoImg(id,cls,fb){const ab=abbr(id);return '<img class="'+cls+'" src="'+LOGO_CAP(id)+'" alt="'+ab+'" data-id="'+id+'" onerror="if(!this.dataset.t){this.dataset.t=1;this.src=\'https://www.mlbstatic.com/team-logos/\'+this.dataset.id+\'.svg\';}else{this.replaceWith(Object.assign(document.createElement(\'span\'),{className:\''+fb+'\',textContent:\''+ab+'\'}));}">';}
 export function capLogoImg(id,cls,fb){return logoImg(id,cls,fb);}
 
-export const KST_OFF=9;
-export function inZone(ms,off){return new Date(ms+off*3600000);}
-export function fmt12(d){let h=d.getUTCHours();const m=d.getUTCMinutes();const ap=h<12?'AM':'PM';h=h%12;if(h===0)h=12;return h+':'+pad(m)+' '+ap;}
-export function zoneDateLabel(ms,off){const d=inZone(ms,off);return WD[d.getUTCDay()]+' '+(d.getUTCMonth()+1)+'/'+d.getUTCDate();}
+/* viewer's own local time zone — plain Date local getters already resolve to it, no offset math needed
+   (unlike a fixed zone like ET, "local" varies per visitor across all 4 continental US time zones) */
+export function localTime(ms){const d=new Date(ms);let h=d.getHours();const m=d.getMinutes();const ap=h<12?'AM':'PM';h=h%12;if(h===0)h=12;return h+':'+pad(m)+' '+ap;}
+export function localDateLabel(ms){const d=new Date(ms);return WD[d.getDay()]+' '+(d.getMonth()+1)+'/'+d.getDate();}
 /* Eastern Time via Intl — DST-safe (was a fixed -4 offset before, wrong Nov–Mar) */
 export const ET_D=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',month:'numeric',day:'numeric'});
 export const ET_T=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit',hour12:true});

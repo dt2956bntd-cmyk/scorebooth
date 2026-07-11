@@ -1,13 +1,13 @@
 import { TEAM_ID, SEASON, API, abbr, short, teamColor } from './constants.js';
-import { $, pad, setPulse, pulseEl, contrastText, stripZero, portrait, capLogoImg, KST_OFF, inZone, fmt12, zoneDateLabel, etDateLabel, etTime, fmtParts, ET_C } from './utils.js';
+import { $, pad, setPulse, pulseEl, contrastText, stripZero, portrait, capLogoImg, localTime, localDateLabel, etDateLabel, etTime, fmtParts, ET_C } from './utils.js';
 import { STORE, fetchJSON } from './store.js';
 import { isFinalG, isLiveG, sides } from './game-helpers.js';
 import { winProb, american, pctFrom } from './model.js';
 
 let countdownTarget=0, countdownLive=false, liveScoreText='';
 function tick(){
-  const now=Date.now(), kst=inZone(now,KST_OFF);
-  $('kst-clock').textContent=pad(kst.getUTCHours())+':'+pad(kst.getUTCMinutes())+':'+pad(kst.getUTCSeconds());
+  const now=Date.now(), local=new Date(now);
+  $('local-clock').textContent=pad(local.getHours())+':'+pad(local.getMinutes())+':'+pad(local.getSeconds());
   const ec=fmtParts(ET_C,now);
   $('et-clock').textContent='ET · '+ec.hour+':'+ec.minute;
   const cd=$('countdown');
@@ -50,7 +50,7 @@ export function renderSchedule(games,finals){
   countdownLive=isLiveG(next);countdownTarget=ms;
   $('vsLabel').textContent=countdownLive?'In progress':'Remaining';
   $('venueLine').innerHTML='📍 <b>'+venue+'</b>';
-  $('kstLine').innerHTML='🕒 <b>'+zoneDateLabel(ms,KST_OFF)+', '+fmt12(inZone(ms,KST_OFF))+' KST</b>';
+  $('localLine').innerHTML='🕒 <b>'+localDateLabel(ms)+', '+localTime(ms)+' local</b>';
   $('etLine').innerHTML='🇺🇸 <b>'+etDateLabel(ms)+', '+etTime(ms)+' ET</b>';
   if(countdownLive){const ps=phi.score!=null?phi.score:0,os=opp.score!=null?opp.score:0;let inn='';if(next.linescore&&next.linescore.currentInningOrdinal)inn=' · '+(next.linescore.inningState?next.linescore.inningState.slice(0,3)+' ':'')+next.linescore.currentInningOrdinal;liveScoreText=abbr(TEAM_ID)+' '+ps+'–'+os+' '+abbr(oid)+inn;}
   const rec=finals.length?sides(finals[finals.length-1]).phi.leagueRecord:phi.leagueRecord;
