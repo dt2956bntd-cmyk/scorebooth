@@ -69,7 +69,10 @@ async function renderScorecardGrid(gamePk){
   wrap.innerHTML='<div class="muted-load">Loading lineup…</div>';
   let box;
   try{box=await getBox(gamePk);}catch(e){wrap.innerHTML='<div class="muted-load">Could not load this game’s lineup yet.</div>';return;}
-  const game=(STORE.finals||[]).find(g=>String(g.gamePk)===String(gamePk))||(STORE.next&&String(STORE.next.gamePk)===String(gamePk)?STORE.next:null);
+  /* STORE.detail (not .finals) is the one hydrated with linescore — that's how we know if a
+     game actually went to extra innings. .finals/.next only tell us who's home/away. */
+  const detailGame=(STORE.detail||[]).find(g=>String(g.gamePk)===String(gamePk));
+  const game=detailGame||(STORE.finals||[]).find(g=>String(g.gamePk)===String(gamePk))||(STORE.next&&String(STORE.next.gamePk)===String(gamePk)?STORE.next:null);
   const phiHome=game?sides(game).phiHome:true;
   const key=phiHome?'home':'away';
   const team=box.teams&&box.teams[key];
@@ -77,13 +80,18 @@ async function renderScorecardGrid(gamePk){
   if(!order.length){wrap.innerHTML='<div class="muted-load">Lineup not posted yet — check back closer to first pitch.</div>';return;}
   const players=team.players||{};
   const data=loadScorecard(gamePk);
-  let html='<div style="overflow-x:auto"><table class="sc-table"><thead><tr><th>Batter</th>';
-  for(let i=1;i<=INNINGS;i++)html+='<th>'+i+'</th>';
+  /* however many innings were actually played, at least INNINGS, and never fewer than any
+     inning number the user already has data in (in case linescore isn't hydrated for this game) */
+  const linescoreInnings=(detailGame&&detailGame.linescore&&detailGame.linescore.innings&&detailGame.linescore.innings.length)||0;
+  const dataMaxInning=Object.values(data).reduce((m,row)=>Math.max(m,...Object.keys(row||{}).map(Number)),0);
+  const inningsCount=Math.max(INNINGS,linescoreInnings,dataMaxInning);
+  let html=(inningsCount>INNINGS?'<div class="muted-load" style="text-align:left;padding:0 0 8px">Extra innings — '+inningsCount+' total, scroll the table right to see them all.</div>':'')+'<div style="overflow-x:auto"><table class="sc-table"><thead><tr><th>Batter</th>';
+  for(let i=1;i<=inningsCount;i++)html+='<th>'+i+'</th>';
   html+='</tr></thead><tbody>';
   order.forEach(pid=>{
     const p=players['ID'+pid],name=p?(p.person.boxscoreName||p.person.fullName):('#'+pid);
     html+='<tr><td>'+name+'</td>';
-    for(let i=1;i<=INNINGS;i++){
+    for(let i=1;i<=inningsCount;i++){
       const val=(data[pid]&&data[pid][i])||'';
       html+='<td><select data-pid="'+pid+'" data-inn="'+i+'">'+OUTCOMES.map(o=>'<option value="'+o+'"'+(o===val?' selected':'')+'>'+(o||'—')+'</option>').join('')+'</select></td>';
     }
