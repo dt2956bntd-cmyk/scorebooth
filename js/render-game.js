@@ -50,6 +50,25 @@ function renderPerformers(box,s){
   if(starter){const q=starter.stats.pitching;html+='<div class="perf">'+headshot(starter.person.id,starter.person.fullName,'hs-sm')+'<span class="who">'+starter.person.fullName+' (SP)</span><span class="stat">'+q.inningsPitched+' IP · '+q.earnedRuns+' ER · '+q.strikeOuts+' K</span></div>';}
   $('gbPerf').innerHTML=html||'<div class="muted-load">No box score detail.</div>';
 }
+/* "detail stats competitors miss" — umpires/weather/attendance/duration come pre-formatted
+   in boxscore.info; LOB comes from each team's teamStats.batting. All free, all from data
+   we already fetch via getBox(), no extra API call needed. */
+function renderGameInfo(box,s){
+  const el=$('gbInfo');if(!el)return;
+  const info=box.info||[];
+  const val=label=>{const f=info.find(x=>x.label===label);return f?f.value:null;};
+  const weather=val('Weather'),wind=val('Wind'),att=val('Att'),dur=val('T'),umps=val('Umpires');
+  const homeKey=s.phiHome?'home':'away',oppKey=s.phiHome?'away':'home';
+  const phiBat=box.teams&&box.teams[homeKey]&&box.teams[homeKey].teamStats&&box.teams[homeKey].teamStats.batting;
+  const oppBat=box.teams&&box.teams[oppKey]&&box.teams[oppKey].teamStats&&box.teams[oppKey].teamStats.batting;
+  const rows=[];
+  if(att)rows.push(['Attendance',att]);
+  if(dur)rows.push(['Duration',dur]);
+  if(weather)rows.push(['Weather',weather+(wind?' · '+wind:'')]);
+  if(umps)rows.push(['Umpires',umps.replace(/\.\s*$/,'')]);
+  if(phiBat&&phiBat.leftOnBase!=null)rows.push(['Left on base',abbr(TEAM_ID)+' '+phiBat.leftOnBase+' · '+abbr(s.opp.team.id)+' '+(oppBat&&oppBat.leftOnBase!=null?oppBat.leftOnBase:'—')]);
+  el.innerHTML=rows.map(([k,v])=>'<div class="ginfo-row"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>').join('');
+}
 function renderGame(focus,phase){
   const s=sides(focus),oid=s.opp.team.id,ms=Date.parse(focus.gameDate),live=phase==='live';
   $('gameEyebrowTxt').textContent=live?"Today's Game":(phase==='pre'?'Next Game':'Last Game · Final');
@@ -63,6 +82,7 @@ function renderGame(focus,phase){
     $('apToggle').textContent='Projected lineups';
     renderPlayers('apBody',focus,'pre',null,apSel,()=>apOpen);
     const shareBtn=$('shareGameBtn');if(shareBtn)shareBtn.classList.add('hide');
+    const infoEl=$('gbInfo');if(infoEl)infoEl.innerHTML='';
     return;
   }
   const won=s.phi.isWinner;
@@ -77,7 +97,7 @@ function renderGame(focus,phase){
   $('gbPerfHead').textContent=live?'Top Performers · live':'Top Performers';
   $('apToggle').textContent=live?'Live box score (all players)':'Full box score (all players)';
   $('gbPerf').innerHTML=skelHTML(3);
-  getBox(focus.gamePk,live).then(box=>{renderPerformers(box,s);renderPlayers('apBody',focus,phase,box,apSel,()=>apOpen);}).catch(()=>{$('gbPerf').innerHTML='';renderPlayers('apBody',focus,phase,null,apSel,()=>apOpen);});
+  getBox(focus.gamePk,live).then(box=>{renderPerformers(box,s);renderGameInfo(box,s);renderPlayers('apBody',focus,phase,box,apSel,()=>apOpen);}).catch(()=>{$('gbPerf').innerHTML='';renderPlayers('apBody',focus,phase,null,apSel,()=>apOpen);});
 }
 export function renderGameTab(games){
   const live=games.find(isLiveG);

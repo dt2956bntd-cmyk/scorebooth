@@ -1,6 +1,6 @@
 import { $, LS } from './utils.js';
 
-const TAB_ORDER=['booth','game','schedule','standings','team'];
+const TAB_ORDER=['booth','game','schedule','standings','team','mygames'];
 let currentTab='booth';
 function positionIndicator(){const b=document.querySelector('.tab-btn.active');const ind=$('tabInd');if(!b||!ind)return;ind.style.width=b.offsetWidth+'px';ind.style.height=b.offsetHeight+'px';ind.style.transform='translate('+b.offsetLeft+'px,'+b.offsetTop+'px)';}
 function activateTab(name){

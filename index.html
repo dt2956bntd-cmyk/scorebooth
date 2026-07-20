@@ -261,6 +261,24 @@
   .recap-score .res.w{background:var(--led);color:#fff;} .recap-score .res.l{background:var(--loss);color:#fff;} .recap-score .res.live{background:var(--amber);color:#fff;}
   .recap-sub{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--faint);}
   .decisions{display:flex;gap:20px;flex-wrap:wrap;padding:14px 22px 4px;font-family:'JetBrains Mono',monospace;font-size:13.5px;color:var(--mid);}
+  .ginfo{padding:10px 22px 4px;border-top:1px solid var(--grid-line);margin-top:10px;}
+  .ginfo-row{display:flex;justify-content:space-between;gap:14px;padding:6px 0;font-family:'JetBrains Mono',monospace;font-size:12.5px;border-bottom:1px dotted var(--grid-line);}
+  .ginfo-row:last-child{border-bottom:none;}
+  .ginfo-row .k{color:var(--faint);letter-spacing:0.04em;}
+  .ginfo-row .v{color:var(--ink);text-align:right;}
+
+  .archive-row{display:flex;align-items:flex-start;flex-wrap:wrap;gap:12px;padding:13px 22px;border-bottom:1px solid var(--grid-line);}
+  .archive-row:last-child{border-bottom:none;}
+  .archive-check{width:20px;height:20px;flex-shrink:0;cursor:pointer;accent-color:var(--red-bright);margin-top:2px;}
+  .archive-main{flex:1;min-width:160px;}
+  .archive-main .opp{font-family:'Archivo',sans-serif;font-size:14.5px;font-weight:600;}
+  .archive-main .date{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--faint);margin-top:2px;}
+  .archive-note{flex:1 1 100%;margin-top:2px;font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--btn-bg);border:1px solid var(--glass-edge);border-radius:8px;padding:8px 10px;color:var(--ink);resize:vertical;min-height:32px;}
+
+  .sc-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:12px;}
+  .sc-table th,.sc-table td{padding:6px;text-align:center;border:1px solid var(--grid-line);white-space:nowrap;}
+  .sc-table th:first-child,.sc-table td:first-child{text-align:left;padding-left:10px;font-family:'Archivo',sans-serif;font-weight:600;}
+  .sc-table select{width:46px;font-size:11px;background:var(--btn-bg);border:1px solid var(--glass-edge);border-radius:5px;color:var(--ink);text-align:center;}
   .decisions b{color:var(--ink);}
   .perf-head{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.06em;color:var(--mid);padding:16px 22px 0;}
   .perf-list{padding:6px 22px 8px;}
@@ -453,6 +471,7 @@
     <button class="tab-btn" data-tab="schedule" role="tab" id="tab-schedule" aria-controls="panel-schedule" aria-selected="false" tabindex="-1">Schedule</button>
     <button class="tab-btn" data-tab="standings" role="tab" id="tab-standings" aria-controls="panel-standings" aria-selected="false" tabindex="-1">Standings</button>
     <button class="tab-btn" data-tab="team" role="tab" id="tab-team" aria-controls="panel-team" aria-selected="false" tabindex="-1">Team</button>
+    <button class="tab-btn" data-tab="mygames" role="tab" id="tab-mygames" aria-controls="panel-mygames" aria-selected="false" tabindex="-1">My Games</button>
   </nav>
 
   <!-- BOOTH -->
@@ -546,6 +565,7 @@
       </div>
       <div style="overflow-x:auto"><table class="ls-table" id="gbLs"></table></div>
       <div class="decisions" id="gbDecisions"></div>
+      <div class="ginfo" id="gbInfo"></div>
       <div class="perf-head" id="gbPerfHead">Top Performers</div>
       <div class="perf-list" id="gbPerf"><div class="skel"><div class="skel-bar" style="width:62%"></div><div class="skel-bar" style="width:48%"></div></div></div>
       <div class="allplayers">
@@ -621,6 +641,18 @@
 
     <h2 class="eyebrow">Active Roster <span class="asof" id="rosterCount"></span></h2>
     <div class="panel" id="rosterPanel"><div class="skel"><div class="skel-bar" style="width:70%"></div><div class="skel-bar" style="width:54%"></div><div class="skel-bar" style="width:62%"></div></div></div>
+  </section>
+
+  <!-- MY GAMES -->
+  <section class="tab-panel" data-panel="mygames" role="tabpanel" id="panel-mygames" aria-labelledby="tab-mygames">
+    <h2 class="eyebrow">My Archive <span class="asof">games you've watched, private to this device</span></h2>
+    <div class="panel" id="archiveWrap"><div class="muted-load">No recent games yet.</div></div>
+
+    <h2 class="eyebrow">Scorecard</h2>
+    <div class="panel" style="padding:16px 22px">
+      <select class="btn" id="scorecardPicker" style="width:100%;margin-bottom:14px"></select>
+      <div id="scorecardWrap"><div class="muted-load">Pick a game above to start scoring.</div></div>
+    </div>
   </section>
 
   <footer>

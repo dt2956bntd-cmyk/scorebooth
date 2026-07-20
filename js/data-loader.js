@@ -6,6 +6,7 @@ import { buildForm, renderSchedule, renderPitchers } from './render-booth.js';
 import { renderGameTab } from './render-game.js';
 import { renderScheduleList, renderResults, renderStandings, standingsLoaded } from './render-schedule-standings.js';
 import { renderRoster, renderLeaders, renderTeamStats } from './render-team.js';
+import { renderArchive, renderScorecardPicker } from './my-games.js';
 
 function nowHMS(){const t=new Date();return pad(t.getHours())+':'+pad(t.getMinutes())+':'+pad(t.getSeconds());}
 function setStatus(s,extra){
@@ -33,6 +34,8 @@ function renderAll(p){
     next=renderSchedule(allGames,allGames.filter(isFinalG));
     renderScheduleList(allGames);
     renderResults(allGames);
+    renderArchive();
+    renderScorecardPicker();
   }
   if(p.detail){
     const detailGames=[];(p.detail.dates||[]).forEach(d=>(d.games||[]).forEach(g=>detailGames.push(g)));detailGames.sort((a,b)=>Date.parse(a.gameDate)-Date.parse(b.gameDate));
